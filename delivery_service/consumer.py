@@ -13,8 +13,10 @@ consumer = KafkaConsumer(
 
 producer = KafkaProducer(bootstrap_servers=['kafka-service:9092'],
                          value_serializer=lambda x: 
-                         dumps(x).encode('utf-8'))
+                         json.dumps(x).encode('utf-8'))
 
 for message in consumer:
     message = message.value
     print(message)
+    data = {}
+    producer.send('order-topic', value=data)
