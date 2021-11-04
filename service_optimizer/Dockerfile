@@ -1,5 +1,5 @@
 
-FROM 3-slim-bullseye
+FROM python:3-slim-bullseye
 
 ADD app.py /app.py
 ADD requirements.txt /requirements.txt
