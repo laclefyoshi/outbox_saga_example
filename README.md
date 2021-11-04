@@ -1,30 +1,24 @@
 # outbox_saga_example
 
-## order_service
+## service_order
 
-Customer から Order を受け取る
+Cusomter が Order を生成する
 
-* Input: Order(Customer, Store/Thing)
-* Output to Kafka: Transaction-id, Order
+Produce Topic: order-topic
+Consume Topic: status-topic
 
-Order の結果を表示する
+## service_optimizer
 
-* Input from Kafka: Transaction-id, Order, Status
-* Output: Order, Status
+Consume Topic: order-topic
+Produce Topic: restaurant-topic, driver-topic
 
-## matching_service
+## service_driver
 
-Order を受け取り、Deliverman をアサインする
+Consume Topic: driver-topic
+Produce Topic: status-topic
 
-* Input from Kafka: Transaction-id, Order
-* Output to Kafka: Transaction-id, Order, Deliverman
+## service_restaurant
 
-## delivery_service
-
-Deliverman が Store から Thing を受け取る
-Deliverman が Customer に Thing を届ける
-
-* Input from Kafka: Transaction-id, Order, Deliverman
-* Output to Kafka: Transaction-id, Order, Status
-
+Consume Topic: restaurant-topic
+Produce Topic: status-topic
 
