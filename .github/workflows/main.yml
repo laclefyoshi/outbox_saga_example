@@ -16,7 +16,7 @@ jobs:
         
         - name: 'Get current datetime'
           id: datetime
-          run: echo "::set-output name=date::$(date +'%Y%m%d%H%M%S')"
+          run: echo "::set-output name=datetime::$(date +'%Y%m%d%H%M%S')"
 
         - name: 'Build and push image'
           uses: azure/docker-login@v1
@@ -26,14 +26,14 @@ jobs:
             password: ${{ secrets.REGISTRY_PASSWORD }}
         - run: |
             cd service_driver/
-            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_driver:${{ steps.date.outputs.datetime }}
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_driver:${{ steps.date.outputs.datetime }}
+            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_driver:${{ steps.datetime.outputs.datetime }}
+            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_driver:${{ steps.datetime.outputs.datetime }}
             cd ../
             cd service_restaurant/
-            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_restaurant:${{ steps.date.outputs.datetime }}
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_restaurant:${{ steps.date.outputs.datetime }}
+            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_restaurant:${{ steps.datetime.outputs.datetime }}
+            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_restaurant:${{ steps.datetime.outputs.datetime }}
             cd ../
             cd service_optimizer/
-            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_optimizer:${{ steps.date.outputs.datetime }}
-            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_optimizer:${{ steps.date.outputs.datetime }}
+            docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_optimizer:${{ steps.datetime.outputs.datetime }}
+            docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_optimizer:${{ steps.datetime.outputs.datetime }}
 
