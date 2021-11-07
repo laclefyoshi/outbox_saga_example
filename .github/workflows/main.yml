@@ -28,6 +28,7 @@ jobs:
             cd service_order/
             docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_order:${{ steps.datetime.outputs.datetime }}
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_order:${{ steps.datetime.outputs.datetime }}
+            cd ../
             cd service_driver/
             docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_driver:${{ steps.datetime.outputs.datetime }}
             docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/service_driver:${{ steps.datetime.outputs.datetime }}
