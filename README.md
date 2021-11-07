@@ -7,6 +7,7 @@ Cusomter が Order を生成する
 * Produce Topic: order-topic
     * `{transaction-id: , customer: , restaurant: }`
 * Consume Topic: status-topic
+    * `{transaction-id: , status: , from: order-sevice}`
 
 ## service_optimizer
 
