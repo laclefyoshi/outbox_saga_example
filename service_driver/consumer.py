@@ -4,23 +4,26 @@ from kafka import KafkaProducer
 import json
 import time
 
+BROKERS = ['kafka-service:9092']
+CONSUMERG = "service-driver"
 CONSUME_TOPIC = "driver-topic"
 PRODUCE_TOPIC = "status-topic"
+FROM = "driver-service"
 
 consumer = KafkaConsumer(
     CONSUME_TOPIC,
-     bootstrap_servers=['kafka-service:9092'],
+     bootstrap_servers=BROKERS,
      auto_offset_reset='lastest',
      enable_auto_commit=True,
-     group_id='service-driver',
+     group_id=CONSUMERG,
      value_deserializer=lambda x: json.loads(x.decode('utf-8')))
 
-producer = KafkaProducer(bootstrap_servers=['kafka-service:9092'],
+producer = KafkaProducer(bootstrap_servers=BROKERS,
                          value_serializer=lambda x: 
                          json.dumps(x).encode('utf-8'))
 
 def produce(tid, status):
-    data = {"transaction-id": tid, "status": status, "from": "driver-service"}
+    data = {"transaction-id": tid, "status": status, "from": FROM}
     produ.send(PRODUCE_TOPIC, value=data)
 
 for message in consumer:
