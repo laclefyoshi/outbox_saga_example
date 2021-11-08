@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: order
-        image: yosaekiacr.azurecr.io/order_driver:20211108024553
+        image: yosaekiacr.azurecr.io/service_order:20211108042247
         env:
         - name: ALLOW_PLAINTEXT_LISTENER
           value: "yes"
