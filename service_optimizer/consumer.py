@@ -34,7 +34,7 @@ for message in consumer:
     data = {"transaction-id": tid, "customer": customer_info, "driver": {"name": "Alice"}}
     producer.send("restaurant-topic", value=data)
     ## driver
-    data = {"transaction-id": tid, "cusotmer", customer_info, "restaurant": restaurant_info}
+    data = {"transaction-id": tid, "cusotmer": customer_info, "restaurant": restaurant_info}
     producer.send("driver-topic", value=data)
     data = {"transaction-id": tid, "status": "completed", "from": FROM}
     producer.send("status-topic", value=data)
