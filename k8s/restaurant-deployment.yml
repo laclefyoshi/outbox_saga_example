@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: restaurant
-        image: yosaekiacr.azurecr.io/service_restaurant:20211107233456
+        image: yosaekiacr.azurecr.io/service_restaurant:20211108021128
         env:
         - name: ALLOW_PLAINTEXT_LISTENER
           value: "yes"

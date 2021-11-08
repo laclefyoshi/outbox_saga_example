@@ -24,7 +24,7 @@ producer = KafkaProducer(bootstrap_servers=BROKERS,
 
 def produce(tid, status):
     data = {"transaction-id": tid, "status": status, "from": FROM}
-    produ.send(PRODUCE_TOPIC, value=data)
+    producer.send(PRODUCE_TOPIC, value=data)
 
 for message in consumer:
     message = message.value
