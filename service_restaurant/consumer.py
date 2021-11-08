@@ -13,7 +13,7 @@ FROM = "restaurant-service"
 consumer = KafkaConsumer(
     CONSUME_TOPIC,
      bootstrap_servers=BROKERS,
-     auto_offset_reset='lastest',
+     auto_offset_reset='latest',
      enable_auto_commit=True,
      group_id=CONSUMERG,
      value_deserializer=lambda x: json.loads(x.decode('utf-8')))

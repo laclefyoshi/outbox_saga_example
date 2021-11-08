@@ -5,4 +5,4 @@ ADD producer.py /producer.py
 ADD requirements.txt /requirements.txt
 
 RUN pip install -r /requirements.txt
-ENTRYPOINT ["python", "/producer.py"]
+ENTRYPOINT ["/usr/local/bin/python", "/producer.py"]
