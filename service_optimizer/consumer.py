@@ -23,8 +23,7 @@ producer = KafkaProducer(bootstrap_servers=BROKERS,
 
 
 for message in consumer:
-    message = message.value
-    msg = json.loads(message)
+    msg = message.value
     tid = msg["transaction-id"]
     customer_info = msg["customer"]
     restaurant_info = msg["restaurant"]

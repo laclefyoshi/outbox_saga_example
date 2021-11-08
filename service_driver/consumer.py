@@ -27,8 +27,7 @@ def produce(tid, status):
     producer.send(PRODUCE_TOPIC, value=data)
 
 for message in consumer:
-    message = message.value
-    msg = json.loads(message)
+    msg = message.value
     tid = msg["transaction-id"]
     customer_info = msg["customer"]
     restaurant_info = msg["restaurant"]
