@@ -28,6 +28,7 @@ def produce(tid, status):
 
 for message in consumer:
     msg = message.value
+    print(msg)
     tid = msg["transaction-id"]
     customer_info = msg["customer"]
     driver_info = msg["driver"]

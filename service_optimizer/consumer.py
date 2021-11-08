@@ -24,6 +24,7 @@ producer = KafkaProducer(bootstrap_servers=BROKERS,
 
 for message in consumer:
     msg = message.value
+    print(msg)
     tid = msg["transaction-id"]
     customer_info = msg["customer"]
     restaurant_info = msg["restaurant"]
