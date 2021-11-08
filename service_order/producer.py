@@ -49,7 +49,7 @@ while True:
     tid = str(uuid.uuid4())
     customer = random.choice(customers)
     restaurant = random.choice(restaurants)
-    data = {"transaction-id": tid, "cusotmer": {"name": customer}, "restaurant": {"name": restaurant}}
+    data = {"transaction-id": tid, "customer": {"name": customer}, "restaurant": {"name": restaurant}}
     producer.send(PRODUCE_TOPIC, value=data)
     print(data)
     time.sleep(random.randint(10, 60))
