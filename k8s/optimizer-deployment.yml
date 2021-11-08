@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: optimizer
-        image: yosaekiacr.azurecr.io/service_optimizer:20211108024553
+        image: yosaekiacr.azurecr.io/service_optimizer:20211108025917
         env:
         - name: ALLOW_PLAINTEXT_LISTENER
           value: "yes"
