@@ -51,4 +51,4 @@ while True:
     restaurant = random.choise(restaurants)
     data = {"transaction-id": tid, "cusotmer": {"name": customer}, "restaurant": {"name": restaurant}}
     producer.send(PRODUCE_TOPIC, value=data)
-    time.sleep(random.randint(10, 30))
+    time.sleep(random.randint(10, 60))
