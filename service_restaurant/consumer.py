@@ -4,23 +4,26 @@ from kafka import KafkaProducer
 import json
 import time
 
-CONSUME_TOPIC = "driver-topic"
+BROKERS = ['kafka-service:9092']
+CONSUMERG = "service-restaurant"
+CONSUME_TOPIC = "restaurant-topic"
 PRODUCE_TOPIC = "status-topic"
+FROM = "restaurant-service"
 
 consumer = KafkaConsumer(
     CONSUME_TOPIC,
-     bootstrap_servers=['kafka-service:9092'],
+     bootstrap_servers=BROKERS,
      auto_offset_reset='lastest',
      enable_auto_commit=True,
-     group_id='service-driver',
+     group_id=CONSUMERG,
      value_deserializer=lambda x: json.loads(x.decode('utf-8')))
 
-producer = KafkaProducer(bootstrap_servers=['kafka-service:9092'],
+producer = KafkaProducer(bootstrap_servers=BROKERS,
                          value_serializer=lambda x: 
                          json.dumps(x).encode('utf-8'))
 
 def produce(tid, status):
-    data = {"transaction-id": tid, "status": status, "from": "driver-service"}
+    data = {"transaction-id": tid, "status": status, "from": FROM}
     produ.send(PRODUCE_TOPIC, value=data)
 
 for message in consumer:
@@ -28,9 +31,7 @@ for message in consumer:
     msg = json.loads(message)
     tid = msg["transaction-id"]
     customer_info = msg["customer"]
-    restaurant_info = msg["restaurant"]
-    produce(tid, "assigned")
-    time.sleep(5.0)
-    produce(tid, "in progress")
+    driver_info = msg["driver"]
+    produce(tid, "cooking")
     time.sleep(7.0)
     produce(tid, "completed")
