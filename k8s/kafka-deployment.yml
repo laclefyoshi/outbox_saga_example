@@ -1,17 +1,30 @@
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: kafka-deployment
+  name: kafka-ss
 spec:
   selector:
     matchLabels:
       app: kafka
+  serviceName: kafka
   replicas: 1
   template:
     metadata:
       labels:
         app: kafka
     spec:
+      initContainers:
+      - name: set-dir-permission
+        image: busybox
+        command:
+          [
+            "sh",
+            "-c",
+            "/bin/chmod -R 777 /bitnami/kafka",
+          ]
+        volumeMounts:
+        - name: kafkadir
+          mountPath: /bitnami/kafka
       containers:
       - name: kafka
         image: bitnami/kafka:3-debian-10
@@ -22,3 +35,16 @@ spec:
           value: "yes"
         - name: KAFKA_CFG_ZOOKEEPER_CONNECT
           value: zk-service:2181
+        volumeMounts:
+        - name: kafkadir
+          mountPath: /bitnami/kafka
+  volumeClaimTemplates:
+  - metadata:
+      name: kafkadir
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "kafka-storage"
+      resources:
+        requests:
+          storage: 2Gi
+

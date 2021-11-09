@@ -1,17 +1,30 @@
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
-kind: Deployment
+kind: StatefulSet
 metadata:
-  name: zk-deployment
+  name: zk-ss
 spec:
   selector:
     matchLabels:
       app: zookeeper
+  serviceName: zookeeper
   replicas: 1
   template:
     metadata:
       labels:
         app: zookeeper
     spec:
+      initContainers:
+      - name: set-dir-permission
+        image: busybox
+        command:
+          [
+            "sh",
+            "-c",
+            "/bin/chmod -R 777 /bitnami/zookeeper",
+          ]
+        volumeMounts:
+        - name: zkdir
+          mountPath: /bitnami/zookeeper
       containers:
       - name: zookeeper
         image: bitnami/zookeeper:latest
@@ -20,3 +33,16 @@ spec:
         env:
         - name: ALLOW_ANONYMOUS_LOGIN
           value: "yes"
+        volumeMounts:
+        - name: zkdir
+          mountPath: /bitnami/zookeeper
+  volumeClaimTemplates:
+  - metadata:
+      name: zkdir
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "zk-storage"
+      resources:
+        requests:
+          storage: 1Gi
+
