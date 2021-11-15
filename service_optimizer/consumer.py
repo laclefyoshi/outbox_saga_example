@@ -27,17 +27,17 @@ for message in consumer:
     print(msg)
     if "payment" not in msg or msg["payment"] == 0:
         continue
-    ## msg["payment"] == 1
-    tid = msg["transaction-id"]
-    customer_info = msg["customer"]
-    restaurant_info = msg["restaurant"]
-    data = {"transaction-id": tid, "status": "in progress", "from": FROM}
-    producer.send("status-topic", value=data)
-    ## restaurant
-    data = {"transaction-id": tid, "customer": customer_info, "driver": {"name": "Alice"}}
-    producer.send("restaurant-topic", value=data)
-    ## driver
-    data = {"transaction-id": tid, "customer": customer_info, "restaurant": restaurant_info}
-    producer.send("driver-topic", value=data)
-    data = {"transaction-id": tid, "status": "completed", "from": FROM}
-    producer.send("status-topic", value=data)
+    if "customer" in msg:
+        tid = msg["transaction-id"]
+        customer_info = msg["customer"]
+        restaurant_info = msg["restaurant"]
+        data = {"transaction-id": tid, "status": "in progress", "from": FROM}
+        producer.send("status-topic", value=data)
+        ## restaurant
+        data = {"transaction-id": tid, "customer": customer_info, "driver": {"name": "Alice"}}
+        producer.send("restaurant-topic", value=data)
+        ## driver
+        data = {"transaction-id": tid, "customer": customer_info, "restaurant": restaurant_info}
+        producer.send("driver-topic", value=data)
+        data = {"transaction-id": tid, "status": "completed", "from": FROM}
+        producer.send("status-topic", value=data)
