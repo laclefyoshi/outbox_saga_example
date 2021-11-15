@@ -47,9 +47,16 @@ restaurants = ["Bistro Bazaar",
 
 while True:
     tid = str(uuid.uuid4())
+    ## order
     customer = random.choice(customers)
     restaurant = random.choice(restaurants)
     data = {"transaction-id": tid, "customer": {"name": customer}, "restaurant": {"name": restaurant}}
+    producer.send(PRODUCE_TOPIC, value=data)
+    print(data)
+    time.sleep(random.randint(5, 20))
+    ## payment
+    payment = random.choice([0, 1])  # cancel or done
+    data = {"transaction-id": tid, "payment": payment}
     producer.send(PRODUCE_TOPIC, value=data)
     print(data)
     time.sleep(random.randint(10, 60))

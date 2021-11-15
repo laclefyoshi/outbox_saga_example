@@ -25,6 +25,9 @@ producer = KafkaProducer(bootstrap_servers=BROKERS,
 for message in consumer:
     msg = message.value
     print(msg)
+    if "payment" not in msg or msg["payment"] == 0:
+        continue
+    ## msg["payment"] == 1
     tid = msg["transaction-id"]
     customer_info = msg["customer"]
     restaurant_info = msg["restaurant"]
