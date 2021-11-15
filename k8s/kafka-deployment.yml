@@ -33,6 +33,10 @@ spec:
         env:
         - name: ALLOW_PLAINTEXT_LISTENER
           value: "yes"
+        - name: KAFKA_CFG_LISTENERS
+          value: PLAINTEXT://:9092
+        - name: KAFKA_CFG_ADVERTISED_LISTENERS
+          value: PLAINTEXT://kafka-service:9092
         - name: KAFKA_CFG_ZOOKEEPER_CONNECT
           value: zk-service:2181
         volumeMounts:

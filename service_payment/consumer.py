@@ -29,6 +29,8 @@ for message in consumer:
     tid = msg["transaction-id"]
     if "payment" in msg:
         if msg["payment"] == 1:
+            if tid not in transactions:  ## inorder?
+                continue
             orderinfo = transactions[tid]
             ## paid order
             data = {"transaction-id": tid, "customer": orderinfo["customer"], "restaurant": orderinfo["restaurant"], "payment": 1}
