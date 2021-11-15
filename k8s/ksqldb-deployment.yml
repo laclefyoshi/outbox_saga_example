@@ -1,0 +1,38 @@
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: StatefulSet
+metadata:
+  name: ksqldb-ss
+spec:
+  selector:
+    matchLabels:
+      app: ksqldb
+  serviceName: ksqldb
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: ksqldb
+    spec:
+      containers:
+      - name: ksqldb
+        image: confluentinc/ksqldb-server:latest
+        ports:
+        - containerPort: 8088
+        env:
+        - name: KSQL_BOOTSTRAP_SERVERS
+          value: kafka-service:9092
+        - name: KSQL_LISTENERS
+          value: http://0.0.0.0:8088
+        volumeMounts:
+        - name: ksqldbdir
+          mountPath: /data
+  volumeClaimTemplates:
+  - metadata:
+      name: ksqldbdir
+    spec:
+      accessModes: ["ReadWriteOnce"]
+      storageClassName: "ksqldb-storage"
+      resources:
+        requests:
+          storage: 2Gi
+
