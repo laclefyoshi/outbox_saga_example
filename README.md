@@ -15,7 +15,7 @@ Cusomter が Order を生成する
 
 * Consume Topic: order-topic
     * `{transaction-id: , customer: , restaurant: }`
-    * `{transaction-id: , payment: [true, cancel]}`
+    * `{transaction-id: , payment: [1, 0]}`
 * Produce Topic: order-topic
     * `{transaction-id: , customer: , restaurant: , payment: 1}`
 
