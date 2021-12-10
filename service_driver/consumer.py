@@ -2,21 +2,24 @@
 from kafka import KafkaConsumer
 from kafka import KafkaProducer
 import json
+import random
 import time
 
 BROKERS = ['kafka-service:9092']
 CONSUMERG = "service-driver"
 CONSUME_TOPIC = "driver-topic"
+ROLLBACK_TOPIC = "rollback-topic"
 PRODUCE_TOPIC = "status-topic"
 FROM = "driver-service"
 
 consumer = KafkaConsumer(
-    CONSUME_TOPIC,
+    # CONSUME_TOPIC,
      bootstrap_servers=BROKERS,
      auto_offset_reset='latest',
      enable_auto_commit=True,
      group_id=CONSUMERG,
      value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+consumer.subscribe([CONSUME_TOPIC, ROLLBACK_TOPIC])
 
 producer = KafkaProducer(bootstrap_servers=BROKERS,
                          value_serializer=lambda x: 
@@ -29,11 +32,18 @@ def produce(tid, status):
 for message in consumer:
     msg = message.value
     print(msg)
+    if "rollback-status" in msg:
+        continue
     tid = msg["transaction-id"]
     customer_info = msg["customer"]
     restaurant_info = msg["restaurant"]
-    produce(tid, "assigned")
-    time.sleep(5.0)
-    produce(tid, "in progress")
-    time.sleep(7.0)
-    produce(tid, "completed")
+    result = random.choice([0, 1])  # failed, succeeded
+    if result == 1:
+        produce(tid, "assigned")
+        time.sleep(5.0)
+        produce(tid, "in progress")
+        time.sleep(7.0)
+        produce(tid, "completed")
+    else:
+        producer.send(ROLLBACK_TOPIC,
+                      value={"transaction-id": tid, "rollback-status": "driver"})

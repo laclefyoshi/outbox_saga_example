@@ -7,15 +7,17 @@ import time
 BROKERS = ['kafka-service:9092']
 CONSUMERG = "service-optimizer"
 CONSUME_TOPIC = "order-topic"
+ROLLBACK_TOPIC = "rollback-topic"
 FROM = "optimizer-service"
 
 consumer = KafkaConsumer(
-    CONSUME_TOPIC,
+    # CONSUME_TOPIC,
      bootstrap_servers=BROKERS,
      auto_offset_reset='latest',
      enable_auto_commit=True,
      group_id=CONSUMERG,
      value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+consumer.subscribe([CONSUME_TOPIC, ROLLBACK_TOPIC])
 
 producer = KafkaProducer(bootstrap_servers=BROKERS,
                          value_serializer=lambda x: 
@@ -41,3 +43,11 @@ for message in consumer:
         producer.send("driver-topic", value=data)
         data = {"transaction-id": tid, "status": "completed", "from": FROM}
         producer.send("status-topic", value=data)
+    if "rollback-status" in msg:
+        cause = msg["rollback-status"]
+        if cause == "restaurant":
+            producer.send(ROLLBACK_TOPIC,
+                          value={"transaction-id": tid, "rollback-status": "order"})
+        if cause == "driver":
+            producer.send(ROLLBACK_TOPIC,
+                          value={"transaction-id": tid, "rollback-status": "order"})
