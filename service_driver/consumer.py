@@ -32,9 +32,9 @@ def produce(tid, status):
 for message in consumer:
     msg = message.value
     print(msg)
+    tid = msg["transaction-id"]
     if "rollback-status" in msg:
         continue
-    tid = msg["transaction-id"]
     customer_info = msg["customer"]
     restaurant_info = msg["restaurant"]
     result = random.choice([0, 1])  # failed, succeeded
