@@ -11,12 +11,13 @@ ROLLBACK_TOPIC = "rollback-topic"
 FROM = "optimizer-payment"
 
 consumer = KafkaConsumer(
-    CONSUME_TOPIC,
+    # CONSUME_TOPIC,
      bootstrap_servers=BROKERS,
      auto_offset_reset='latest',
      enable_auto_commit=True,
      group_id=CONSUMERG,
      value_deserializer=lambda x: json.loads(x.decode('utf-8')))
+consumer.subscribe([CONSUME_TOPIC, ROLLBACK_TOPIC])
 
 producer = KafkaProducer(bootstrap_servers=BROKERS,
                          value_serializer=lambda x: 
