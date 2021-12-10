@@ -38,7 +38,7 @@ for message in consumer:
                                  "from": "payment-service"})
             try:
                 del transactions[tid]
-            finally:
+            except KeyError:
                 pass
         continue
     if "payment" in msg:
