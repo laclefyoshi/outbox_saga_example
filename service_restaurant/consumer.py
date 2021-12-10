@@ -34,7 +34,8 @@ for message in consumer:
     print(msg)
     tid = msg["transaction-id"]
     if "rollback-status" in msg:
-        produce(tid, "canceled")
+        if msg["rollback-status"] == "order":
+            produce(tid, "canceled")
         continue
     customer_info = msg["customer"]
     driver_info = msg["driver"]
