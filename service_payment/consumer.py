@@ -31,15 +31,11 @@ for message in consumer:
     tid = msg["transaction-id"]
     if "rollback-status" in msg:
         if msg["rollback-status"] == "order":
-            producer.send("order-topic",
-                          value={"transaction-id": tid, "status": "canceled"})
             producer.send("status-topic",
                           value={"transaction-id": tid, "status": "canceled",
                                  "from": "payment-service"})
-            try:
+            if tid in transactions:
                 del transactions[tid]
-            except KeyError:
-                pass
         continue
     if "payment" in msg:
         if msg["payment"] == 1:
