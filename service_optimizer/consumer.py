@@ -27,6 +27,15 @@ producer = KafkaProducer(bootstrap_servers=BROKERS,
 for message in consumer:
     msg = message.value
     print(msg)
+    if "rollback-status" in msg:
+        cause = msg["rollback-status"]
+        if cause == "restaurant":
+            producer.send(ROLLBACK_TOPIC,
+                          value={"transaction-id": tid, "rollback-status": "order"})
+        if cause == "driver":
+            producer.send(ROLLBACK_TOPIC,
+                          value={"transaction-id": tid, "rollback-status": "order"})
+        continue
     if "payment" not in msg or msg["payment"] == 0:
         continue
     if "customer" in msg:
@@ -43,11 +52,3 @@ for message in consumer:
         producer.send("driver-topic", value=data)
         data = {"transaction-id": tid, "status": "completed", "from": FROM}
         producer.send("status-topic", value=data)
-    if "rollback-status" in msg:
-        cause = msg["rollback-status"]
-        if cause == "restaurant":
-            producer.send(ROLLBACK_TOPIC,
-                          value={"transaction-id": tid, "rollback-status": "order"})
-        if cause == "driver":
-            producer.send(ROLLBACK_TOPIC,
-                          value={"transaction-id": tid, "rollback-status": "order"})
