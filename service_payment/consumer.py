@@ -31,7 +31,15 @@ for message in consumer:
     tid = msg["transaction-id"]
     if "rollback-status" in msg:
         if msg["rollback-status"] == "order":
-            produce(tid, "canceled")
+            producer.produce("order-topic",
+                             {"transaction-id": tid, "status" "canceled"})
+            producer.produce("status-topic",
+                             {"transaction-id": tid, "status" "canceled",
+                              "from": "payment-service"})
+            try:
+                del transactions[tid]
+            finally:
+                pass
         continue
     if "payment" in msg:
         if msg["payment"] == 1:
@@ -41,8 +49,14 @@ for message in consumer:
             ## paid order
             data = {"transaction-id": tid, "customer": orderinfo["customer"], "restaurant": orderinfo["restaurant"], "payment": 1}
             producer.send("order-topic", value=data)
+            producer.produce("status-topic",
+                             {"transaction-id": tid, "status" "paid",
+                              "from": "payment-service"})
             del transactions[tid]
         else: ## payment == 0/cancel
+            producer.produce("status-topic",
+                             {"transaction-id": tid, "status" "canceled",
+                              "from": "payment-service"})
             del transactions[tid]
     else:
         customer_info = msg["customer"]
