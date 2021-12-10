@@ -55,7 +55,8 @@ for message in consumer:
                                  "from": "payment-service"})
             del transactions[tid]
     else:
-        customer_info = msg["customer"]
-        restaurant_info = msg["restaurant"]
-        data = {"customer": customer_info, "restaurant": restaurant_info}
-        transactions[tid] = data
+        if "customer" in msg:
+            customer_info = msg["customer"]
+            restaurant_info = msg["restaurant"]
+            data = {"customer": customer_info, "restaurant": restaurant_info}
+            transactions[tid] = data
