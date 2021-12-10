@@ -7,6 +7,7 @@ import time
 BROKERS = ['kafka-service:9092']
 CONSUMERG = "service-payment"
 CONSUME_TOPIC = "order-topic"
+ROLLBACK_TOPIC = "rollback-topic"
 FROM = "optimizer-payment"
 
 consumer = KafkaConsumer(
@@ -27,6 +28,10 @@ for message in consumer:
     msg = message.value
     print(msg)
     tid = msg["transaction-id"]
+    if "rollback-status" in msg:
+        if msg["rollback-status"] == "order":
+            produce(tid, "canceled")
+        continue
     if "payment" in msg:
         if msg["payment"] == 1:
             if tid not in transactions:  ## inorder?
